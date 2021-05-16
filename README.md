@@ -23,6 +23,7 @@ we are using react js as a frontend and the auth0 framework so far .
 
 ## Credit and Collaborations
 [Abdallah](https://github.com/AbdallahAbuKhurma)
+# work Flow 
 
 Name of feature: ____________Set up your front-end repository____________________
 
@@ -54,9 +55,13 @@ Actual time needed to complete: __2 hours___
 
 Make a list of each parson’s strengths.
 * How can you best utilize these strengths in the development of your application? 
+
+
 | Mariam | Abdallah |
 |--------|-----------|
 |fast learning and I can use it to learn new methods or to solve any issue from Youtube| manage time ,so I can divide the work equally and not to be late |
+
+
 * In what areas do you each want to develop greater strength?
 we will try to do our best to achieve the goals 
 * Knowing that every person in your team needs to understand the code, how do you plan to approach the day-to-day development?
