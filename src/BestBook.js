@@ -16,13 +16,14 @@ class MyFavoriteBooks extends React.Component {
       showBestBooks: false,
       server: process.env.REACT_APP_SERVER_URL,
     }
+    this.getBestBooks();
   }
+  
   componentDidMount() {
     this.setState({
       showBestBooks: true,
     });
   }
-
   getBestBooks = async () => {
     const { user } = this.props.auth0;
 
@@ -31,7 +32,6 @@ class MyFavoriteBooks extends React.Component {
         email: user.email,
 
       }
-      console.log('this is the user ', user);
       const books = await axios.get(`${this.state.server}/books`, { params: objParam });
       this.setState({
         books: books.data[0].books,
@@ -41,11 +41,9 @@ class MyFavoriteBooks extends React.Component {
 
     catch (err) {
       console.log(err);
-
     }
   }
   render() {
-    console.log('these are the books ', this.state.books);
     return (
       <>
         <Jumbotron>
@@ -55,10 +53,10 @@ class MyFavoriteBooks extends React.Component {
             </p>
           {this.state.showBestBooks &&
             <>
-              {this.state.books.map((data, index) => {
+              {this.state.books.map((data) => {
                 return (
                   <>
-                    <Card style={{ width: '18rem' }} key={index}>
+                    <Card style={{ width: '18rem' }}>
                       <Card.Body>
                         <Card.Title>Name: {data.name}</Card.Title>
                         <Card.Text>Description: {data.description}</Card.Text>
