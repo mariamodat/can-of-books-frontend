@@ -12,8 +12,9 @@ code {
     monospace;
 }
 
-.form{
-  text-align: center;
-  background-image: url(./ii.jpg);
-  margin-left: 10px;
+
+
+
+.disc{
+  color: red;
 }

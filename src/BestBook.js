@@ -116,26 +116,29 @@ class MyFavoriteBooks extends React.Component {
             formDataFunc={this.formDataFunc}
           />
           {this.state.showBestBooks &&
-            <>
 
+            <CardColumns>
               {this.state.books.map((data) => {
                 return (
                   <>
-                    <CardColumns>
-                      <Card style={{ width: '18rem' }}>
-                        <Card.Body>
-                          <Card.Title>Name: {data.name}</Card.Title>
-                          <Card.Text>Description: {data.description}</Card.Text>
-                          <Card.Text>Status: {data.status}</Card.Text>
-                        </Card.Body>
-                      </Card>
-                    </CardColumns>
+
+                    <Card className='card' style={{ width: '18rem' }}>
+                      <Card.Body>
+                        <Card.Title>Name: {data.name}</Card.Title>
+                        <Card.Text className='disc'>Description: {data.description}</Card.Text>
+                        <Card.Text>Status: {data.status}</Card.Text>
+                      </Card.Body>
+                    </Card>
+
 
                   </>
                 );
+
               })
+
               }
-            </>
+            </CardColumns>
+
 
           }
         </Jumbotron>
