@@ -7,6 +7,8 @@ import './BestBooks.css';
 import axios from 'axios';
 import { withAuth0 } from "@auth0/auth0-react";
 import BooksForm from './booksForm';
+import Button from 'react-bootstrap/Button';
+
 
 
 class MyFavoriteBooks extends React.Component {
@@ -23,7 +25,6 @@ class MyFavoriteBooks extends React.Component {
       server: process.env.REACT_APP_SERVER_URL,
     }
     this.getBestBooks();
-    // this.formDataFunc();
   }
 
   componentDidMount() {
@@ -51,7 +52,7 @@ class MyFavoriteBooks extends React.Component {
     console.log('the value of the name ', event.target.value);
   }
   updateBookDisc = (e) => this.setState({ bookDisc: e.target.value });
-  updateBookStatus = (e) => this.setState({ BookStatus: e.target.value });
+  updateBookStatus = (e) => this.setState({ bookStatus: e.target.value });
 
 
   formDataFunc = async (e) => {
@@ -67,7 +68,9 @@ class MyFavoriteBooks extends React.Component {
 
       }
       const books = await axios.post(`${this.state.server}/books`, bodyData);
-      console.log('these are the new books', books);
+      this.setState ({
+        books: books.data
+      })
 
 
     } catch (error) {
@@ -75,6 +78,8 @@ class MyFavoriteBooks extends React.Component {
     }
 
   }
+
+  
 
 
   getBestBooks = async () => {
@@ -97,7 +102,28 @@ class MyFavoriteBooks extends React.Component {
     catch (err) {
       console.log(err);
     }
+    
   }
+
+  
+  deleteAddedBook = async (index) => {
+    const { user } = this.props.auth0;
+    const newArrayOfBooks = this.state.books.filter((book, idx) => {
+      return idx !== index;
+    });
+    
+    this.setState({
+      books: newArrayOfBooks
+    });
+
+    const query = {
+      email: user.email
+    }
+
+    await axios.delete(`${this.state.server}/books/${index}`, { params: query });
+
+  }
+
   render() {
     return (
       <>
@@ -106,7 +132,7 @@ class MyFavoriteBooks extends React.Component {
           <p>
             This is a collection of my favorite books
             </p>
-          <button onClick={this.showFormFunc}> Show Books</button>
+          <Button onClick={this.showFormFunc}> Show Books</Button>
           <BooksForm
             show={this.state.show}
             closeForm={this.closeFormFunc}
@@ -118,16 +144,19 @@ class MyFavoriteBooks extends React.Component {
           {this.state.showBestBooks &&
             <>
 
-              {this.state.books.map((data) => {
+              {this.state.books.map((data, index) => {
                 return (
                   <>
                     <CardColumns>
-                      <Card style={{ width: '18rem' }}>
+                      <Card style={{ width: '18rem' }} key={index}>
                         <Card.Body>
                           <Card.Title>Name: {data.name}</Card.Title>
                           <Card.Text>Description: {data.description}</Card.Text>
                           <Card.Text>Status: {data.status}</Card.Text>
+                          <Button onClick={() => {this.deleteAddedBook(index)}}>Delete</Button>    
+
                         </Card.Body>
+
                       </Card>
                     </CardColumns>
 
