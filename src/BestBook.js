@@ -26,13 +26,14 @@ class MyFavoriteBooks extends React.Component {
       showUpdateForm: false,
       server: process.env.REACT_APP_SERVER_URL,
     }
-    this.getBestBooks();
+
   }
 
   componentDidMount() {
     this.setState({
       showBestBooks: true,
     });
+    this.getBestBooks();
   }
 
   showFormFunc = () => {
@@ -72,9 +73,9 @@ class MyFavoriteBooks extends React.Component {
       }
       const books = await axios.post(`${this.state.server}/books`, bodyData);
       this.setState({
-        books: books.data
+        books: books.data,
       })
-
+      console.log('hello from box', this.state.books);
 
     } catch (error) {
       console.log(error);
@@ -107,13 +108,13 @@ class MyFavoriteBooks extends React.Component {
         email: user.email,
 
       }
-      const books = await axios.get(`${this.state.server}/books`, { params: objParam });
+      const books = await axios.get(`${this.state.server}/books?email=${user.email}`);
       this.setState({
-        books: books.data[0].books,
+        books: books.data[1].books,
         showBestBooks: true,
         email: user.email,
       })
-
+      console.log('the books', this.state.books);
     }
 
     catch (err) {
@@ -153,7 +154,7 @@ class MyFavoriteBooks extends React.Component {
     const books = await axios.put(`${this.state.server}/books/${this.state.index}`, reqBody);
 
     this.setState({
-      cats: books.data
+      books: books.data
     });
 
   }
