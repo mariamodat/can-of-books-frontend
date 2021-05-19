@@ -68,7 +68,7 @@ class MyFavoriteBooks extends React.Component {
 
       }
       const books = await axios.post(`${this.state.server}/books`, bodyData);
-      this.setState ({
+      this.setState({
         books: books.data
       })
 
@@ -79,7 +79,7 @@ class MyFavoriteBooks extends React.Component {
 
   }
 
-  
+
 
 
   getBestBooks = async () => {
@@ -102,16 +102,16 @@ class MyFavoriteBooks extends React.Component {
     catch (err) {
       console.log(err);
     }
-    
+
   }
 
-  
+
   deleteAddedBook = async (index) => {
     const { user } = this.props.auth0;
     const newArrayOfBooks = this.state.books.filter((book, idx) => {
       return idx !== index;
     });
-    
+
     this.setState({
       books: newArrayOfBooks
     });
@@ -143,7 +143,6 @@ class MyFavoriteBooks extends React.Component {
           />
           {this.state.showBestBooks &&
             <>
-
               {this.state.books.map((data, index) => {
                 return (
                   <>
@@ -153,7 +152,7 @@ class MyFavoriteBooks extends React.Component {
                           <Card.Title>Name: {data.name}</Card.Title>
                           <Card.Text>Description: {data.description}</Card.Text>
                           <Card.Text>Status: {data.status}</Card.Text>
-                          <Button onClick={() => {this.deleteAddedBook(index)}}>Delete</Button>    
+                          <Button onClick={() => { this.deleteAddedBook(index) }}>Delete</Button>
 
                         </Card.Body>
 
@@ -162,10 +161,11 @@ class MyFavoriteBooks extends React.Component {
 
                   </>
                 );
-              })
-              }
-            </>
 
+              })
+
+              }
+              </>
           }
         </Jumbotron>
       </>
