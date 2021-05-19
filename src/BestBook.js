@@ -8,7 +8,7 @@ import axios from 'axios';
 import { withAuth0 } from "@auth0/auth0-react";
 import BooksForm from './booksForm';
 import Button from 'react-bootstrap/Button';
-
+import UpdateForm from './UpdateForm'
 
 
 class MyFavoriteBooks extends React.Component {
@@ -16,12 +16,14 @@ class MyFavoriteBooks extends React.Component {
     super(props);
     this.state = {
       books: [],
+      index: 0,
       bookName: '',
       bookDisc: '',
       bookStatus: '',
       email: '',
       show: false,
       showBestBooks: false,
+      showUpdateForm: false,
       server: process.env.REACT_APP_SERVER_URL,
     }
     this.getBestBooks();
@@ -57,13 +59,14 @@ class MyFavoriteBooks extends React.Component {
 
   formDataFunc = async (e) => {
     e.preventDefault();
+    const { user } = this.props.auth0;
 
     try {
 
       const bodyData = {
-        email: this.state.email,
+        email: user.email,
         bookName: this.state.bookName,
-        bookDisc: this.state.bookName,
+        bookDisc: this.state.bookDisc,
         bookStatus: this.state.bookStatus
 
       }
@@ -79,7 +82,21 @@ class MyFavoriteBooks extends React.Component {
 
   }
 
+  showUpdateForm = (idx) => {
 
+    const newBooksArray = this.state.books.filter((value, index) => {
+      return idx === index
+    });
+
+    this.setState({
+      index: idx,
+      bookName: newBooksArray[0].name,
+      bookDisc: newBooksArray[0].description,
+      bookStatus: newBooksArray[0].status,
+
+      show: true,
+    });
+  }
 
 
   getBestBooks = async () => {
@@ -123,7 +140,23 @@ class MyFavoriteBooks extends React.Component {
     await axios.delete(`${this.state.server}/books/${index}`, { params: query });
 
   }
+  updateForm = async (e) => {
+    const { user } = this.props.auth0;
 
+    e.preventDefault();
+    const reqBody = {
+      email: user.email,
+      bookName: this.state.bookName,
+      bookDisc: this.state.bookDisc,
+      bookStatus: this.state.bookStatus
+    }
+    const books = await axios.put(`${this.state.server}/books/${this.state.index}`, reqBody);
+
+    this.setState({
+      cats: books.data
+    });
+
+  }
   render() {
     return (
       <>
@@ -140,7 +173,22 @@ class MyFavoriteBooks extends React.Component {
             updateBookDisc={this.updateBookDisc}
             updateBookStatus={this.updateBookStatus}
             formDataFunc={this.formDataFunc}
+            showUpdateForm={this.showUpdateForm}
           />
+          <>
+            {this.state.show &&
+              <UpdateForm
+                bookName={this.state.bookName}
+                bookDisc={this.state.bookDisc}
+                bookStatus={this.state.bookStatus}
+                updateForm={this.updateForm}
+                updateName={this.updateName}
+                updateBookDisc={this.updateBookDisc}
+                updateBookStatus={this.updateBookStatus}
+
+              />
+            }
+          </>
           {this.state.showBestBooks &&
             <>
               {this.state.books.map((data, index) => {
@@ -153,6 +201,7 @@ class MyFavoriteBooks extends React.Component {
                           <Card.Text>Description: {data.description}</Card.Text>
                           <Card.Text>Status: {data.status}</Card.Text>
                           <Button onClick={() => { this.deleteAddedBook(index) }}>Delete</Button>
+                          <Button onClick={() => { this.showUpdateForm(index) }}>Update</Button>
 
                         </Card.Body>
 
@@ -165,7 +214,7 @@ class MyFavoriteBooks extends React.Component {
               })
 
               }
-              </>
+            </>
           }
         </Jumbotron>
       </>
